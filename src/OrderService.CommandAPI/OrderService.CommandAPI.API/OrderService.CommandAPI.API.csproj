@@ -11,4 +11,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+  <ProjectReference Include="..\..\OrderService.QueryAPI.Application\OrderService.QueryAPI.Application.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Core\BuildingBlocks.Core.csproj" />
+  </ItemGroup>
+
 </Project>
