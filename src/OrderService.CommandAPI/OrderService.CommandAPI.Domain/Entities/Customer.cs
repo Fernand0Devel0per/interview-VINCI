@@ -18,4 +18,20 @@ public class Customer : IEntity
     }
 
     private Customer() { }
+    
+    public void UpdateName(string? name)
+    {
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            Name = name;
+        }
+    }
+
+    public void UpdateEmail(string? email)
+    {
+        if (!string.IsNullOrWhiteSpace(email))
+        {
+            Email = email;
+        }
+    }
 }

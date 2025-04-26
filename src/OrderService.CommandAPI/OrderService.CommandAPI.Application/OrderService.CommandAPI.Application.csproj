@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Core\BuildingBlocks.Core.csproj" />
+    <ProjectReference Include="..\OrderService.CommandAPI.Domain\OrderService.CommandAPI.Domain.csproj" />
+    <ProjectReference Include="..\OrderService.CommandAPI.Infrastructure\OrderService.CommandAPI.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
