@@ -1,4 +1,5 @@
 using BuildingBlocks.Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using OrderService.CommandAPI.Domain.Repositories;
 
 namespace OrderService.CommandAPI.Infrastructure.Repositories;

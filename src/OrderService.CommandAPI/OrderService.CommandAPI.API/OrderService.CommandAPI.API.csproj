@@ -14,6 +14,7 @@
   <ItemGroup>
   <ProjectReference Include="..\..\OrderService.QueryAPI.Application\OrderService.QueryAPI.Application.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Core\BuildingBlocks.Core.csproj" />
+    <ProjectReference Include="..\OrderService.CommandAPI.Infrastructure\OrderService.CommandAPI.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

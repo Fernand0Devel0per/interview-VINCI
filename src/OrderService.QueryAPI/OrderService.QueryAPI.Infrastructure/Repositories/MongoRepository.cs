@@ -1,4 +1,5 @@
 using BuildingBlocks.Core.Interfaces;
+using MongoDB.Driver;
 using OrderService.QueryAPI.Domain.Repositories;
 
 namespace OrderService.QueryAPI.Infrastructure.Repositories;

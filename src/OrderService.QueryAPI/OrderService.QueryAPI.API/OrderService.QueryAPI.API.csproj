@@ -14,5 +14,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Core\BuildingBlocks.Core.csproj" />
     <ProjectReference Include="..\..\OrderService.QueryAPI.Application\OrderService.QueryAPI.Application.csproj" />
+    <ProjectReference Include="..\OrderService.QueryAPI.Infrastructure\OrderService.QueryAPI.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\mongodb.driver\3.3.0\lib\net6.0\MongoDB.Driver.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using OrderService.CommandAPI.Domain.Entities;
 using OrderService.CommandAPI.Domain.Repositories;
 
