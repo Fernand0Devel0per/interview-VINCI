@@ -16,4 +16,20 @@ public class Product : IEntity
     }
 
     private Product() { }
+
+    public void UpdateName(string? name)
+    {
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            Name = name;
+        }
+    }
+
+    public void UpdatePrice(decimal price)
+    {
+        if (price > 0)
+        {
+            Price = price;
+        }
+    }
 }
