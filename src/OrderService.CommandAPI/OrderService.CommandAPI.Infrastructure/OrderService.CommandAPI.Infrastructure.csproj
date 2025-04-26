@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Core\BuildingBlocks.Core.csproj" />
+    <ProjectReference Include="..\OrderService.CommandAPI.Domain\OrderService.CommandAPI.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
