@@ -1,4 +1,5 @@
 using BuildingBlocks.Core.ApiResponses;
+using OrderService.CommandAPI.Application.Common;
 using OrderService.CommandAPI.Application.UseCases.Customers;
 using OrderService.CommandAPI.Application.UseCases.Customers.DTOs;
 using OrderService.CommandAPI.Application.UseCases.Customers.Mappings;
@@ -11,11 +12,13 @@ public class CustomerService : ICustomerService
 {
     private readonly ICustomerRepository _customerRepository;
     private readonly CommandDbContext _dbContext;
+    private readonly EventPublisherService _eventPublisherService;
 
-    public CustomerService(ICustomerRepository customerRepository, CommandDbContext dbContext)
+    public CustomerService(ICustomerRepository customerRepository, CommandDbContext dbContext, EventPublisherService eventPublisherService)
     {
         _customerRepository = customerRepository;
         _dbContext = dbContext;
+        _eventPublisherService = eventPublisherService;
     }
 
     public async Task<IApiResponse> CreateCustomerAsync(CreateCustomerDto requestDto, CancellationToken cancellationToken = default)
@@ -24,7 +27,14 @@ public class CustomerService : ICustomerService
 
         await _customerRepository.AddAsync(customer, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
-
+        
+        await _eventPublisherService.PublishEntityChangedEventAsync(
+            EntityChangeType.Created,
+            customer,
+            EventTopics.CustomerChanges,
+            cancellationToken
+        );
+        
         return ApiResponse<Guid>.Ok(customer.Id, "Customer created successfully.");
     }
 
@@ -39,7 +49,14 @@ public class CustomerService : ICustomerService
 
         await _customerRepository.UpdateAsync(customer, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
-
+        
+        await _eventPublisherService.PublishEntityChangedEventAsync(
+            EntityChangeType.Updated,
+            customer,
+            EventTopics.CustomerChanges,
+            cancellationToken
+        );
+        
         return ApiResponse<Guid>.Ok(customer.Id, "Customer updated successfully.");
     }
 
@@ -52,7 +69,14 @@ public class CustomerService : ICustomerService
 
         await _customerRepository.DeleteAsync(id, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
-
+        
+        await _eventPublisherService.PublishEntityChangedEventAsync(
+            EntityChangeType.Deleted,
+            customer,
+            EventTopics.CustomerChanges,
+            cancellationToken
+        );
+        
         return ApiResponse<Guid>.Ok(id, "Customer deleted successfully.");
     }
 }

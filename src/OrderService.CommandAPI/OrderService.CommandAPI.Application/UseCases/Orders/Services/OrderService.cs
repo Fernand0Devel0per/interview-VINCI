@@ -1,4 +1,5 @@
 using BuildingBlocks.Core.ApiResponses;
+using OrderService.CommandAPI.Application.Common;
 using OrderService.CommandAPI.Application.UseCases.Orders.DTOs;
 using OrderService.CommandAPI.Application.UseCases.Orders.Mappings;
 using OrderService.CommandAPI.Domain.Repositories;
@@ -9,13 +10,15 @@ namespace OrderService.CommandAPI.Application.UseCases.Orders.Services;
 public class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderRepository;
-    private readonly CommandDbContext _dbContext;
-
-    public OrderService(IOrderRepository orderRepository, CommandDbContext dbContext)
-    {
-        _orderRepository = orderRepository;
-        _dbContext = dbContext;
-    }
+        private readonly CommandDbContext _dbContext;
+        private readonly EventPublisherService _eventPublisherService;
+    
+        public OrderService(IOrderRepository orderRepository, CommandDbContext dbContext, EventPublisherService eventPublisherService)
+        {
+            _orderRepository = orderRepository;
+            _dbContext = dbContext;
+            _eventPublisherService = eventPublisherService;
+        }
 
     public async Task<IApiResponse> CreateOrderAsync(CreateOrderDto requestDto, CancellationToken cancellationToken = default)
     {
@@ -23,7 +26,14 @@ public class OrderService : IOrderService
 
         await _orderRepository.AddAsync(order, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
-
+        
+        await _eventPublisherService.PublishEntityChangedEventAsync(
+            EntityChangeType.Created,
+            order,
+            EventTopics.OrderChanges,
+            cancellationToken
+        );
+        
         return ApiResponse<Guid>.Ok(order.Id, "Order created successfully.");
     }
 
@@ -33,7 +43,14 @@ public class OrderService : IOrderService
 
         if (order is null)
             return ApiResponse<string>.Fail(new List<string> { "Order not found" }, "Not Found");
-
+        
+        await _eventPublisherService.PublishEntityChangedEventAsync(
+            EntityChangeType.Deleted,
+            order,
+            EventTopics.OrderChanges,
+            cancellationToken
+        );
+        
         await _orderRepository.DeleteAsync(id, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
