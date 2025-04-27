@@ -34,8 +34,7 @@ public class ExceptionHandlingMiddleware
         private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-
-            // Default values
+            
             HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
             IApiResponse response;
 

@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Messaging", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Core", "BuildingBlocks\BuildingBlocks.Core\BuildingBlocks.Core.csproj", "{1931EB1B-E035-4C77-890B-BEF9089B4161}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks.Caching", "BuildingBlocks.Caching\BuildingBlocks.Caching.csproj", "{010991E9-9477-4501-9B1A-EB0749FFAF18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,7 @@ Global
 		{5B74955F-04DD-45F3-A51D-A6FA1353E68C} = {814F6421-9B07-43A5-8FF5-4E92F5CAABA6}
 		{4845F315-A0A0-465B-BFD3-707CD37A507F} = {211F8CDB-CDF2-4F98-BCCB-F3DFDC3C4941}
 		{1931EB1B-E035-4C77-890B-BEF9089B4161} = {211F8CDB-CDF2-4F98-BCCB-F3DFDC3C4941}
+		{010991E9-9477-4501-9B1A-EB0749FFAF18} = {211F8CDB-CDF2-4F98-BCCB-F3DFDC3C4941}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7880EBA4-1957-45A6-A044-583CAD93D6B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -106,5 +109,9 @@ Global
 		{1931EB1B-E035-4C77-890B-BEF9089B4161}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1931EB1B-E035-4C77-890B-BEF9089B4161}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1931EB1B-E035-4C77-890B-BEF9089B4161}.Release|Any CPU.Build.0 = Release|Any CPU
+		{010991E9-9477-4501-9B1A-EB0749FFAF18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{010991E9-9477-4501-9B1A-EB0749FFAF18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{010991E9-9477-4501-9B1A-EB0749FFAF18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{010991E9-9477-4501-9B1A-EB0749FFAF18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
