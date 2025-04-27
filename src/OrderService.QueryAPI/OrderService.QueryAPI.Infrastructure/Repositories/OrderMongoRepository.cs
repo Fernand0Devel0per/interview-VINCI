@@ -4,7 +4,7 @@ using OrderService.QueryAPI.Domain.Repositories;
 
 namespace OrderService.QueryAPI.Infrastructure.Repositories;
 
-public class CustomerReadRepository : MongoRepository<Customer>, ICustomerReadRepository
+public class OrderMongoRepository : MongoRepository<Order>, IOrderMongoRepository
 {
-    public CustomerReadRepository(IMongoDatabase database) : base(database, "Customers") { }
+    public OrderMongoRepository(IMongoDatabase database) : base(database, "Customers") { }
 }
