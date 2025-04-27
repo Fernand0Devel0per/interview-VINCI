@@ -1,10 +1,11 @@
 using BuildingBlocks.Core.ApiResponses;
+using OrderService.CommandAPI.Application.UseCases.Customers;
 using OrderService.CommandAPI.Application.UseCases.Customers.DTOs;
 using OrderService.CommandAPI.Application.UseCases.Customers.Mappings;
 using OrderService.CommandAPI.Domain.Repositories;
 using OrderService.CommandAPI.Infrastructure.Data;
 
-namespace OrderService.CommandAPI.Application.UseCases.Customers;
+namespace OrderService.CommandAPI.Application.UseCases.Customers.Services;
 
 public class CustomerService : ICustomerService
 {

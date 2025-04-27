@@ -1,7 +1,7 @@
 using BuildingBlocks.Core.ApiResponses;
 using OrderService.CommandAPI.Application.UseCases.Products.DTOs;
 
-namespace OrderService.CommandAPI.Application.UseCases.Products;
+namespace OrderService.CommandAPI.Application.UseCases.Products.Services;
 
 public interface IProductService
 {

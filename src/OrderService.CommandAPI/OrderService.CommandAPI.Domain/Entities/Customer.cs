@@ -8,8 +8,6 @@ public class Customer : IEntity
     public string Name { get; private set; }
     public string Email { get; private set; }
 
-    public List<Order> Orders { get; private set; } = new();
-
     public Customer(string name, string email)
     {
         Id = Guid.NewGuid();

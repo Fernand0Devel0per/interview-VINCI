@@ -1,7 +1,7 @@
 using BuildingBlocks.Core.ApiResponses;
 using OrderService.CommandAPI.Application.UseCases.Customers.DTOs;
 
-namespace OrderService.CommandAPI.Application.UseCases.Customers;
+namespace OrderService.CommandAPI.Application.UseCases.Customers.Services;
 
 public interface ICustomerService
 {

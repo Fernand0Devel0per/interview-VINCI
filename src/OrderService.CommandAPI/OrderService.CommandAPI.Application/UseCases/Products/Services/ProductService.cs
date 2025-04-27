@@ -4,7 +4,7 @@ using OrderService.CommandAPI.Application.UseCases.Products.Mappings;
 using OrderService.CommandAPI.Domain.Repositories;
 using OrderService.CommandAPI.Infrastructure.Data;
 
-namespace OrderService.CommandAPI.Application.UseCases.Products;
+namespace OrderService.CommandAPI.Application.UseCases.Products.Services;
 
 public class ProductService : IProductService
 {
