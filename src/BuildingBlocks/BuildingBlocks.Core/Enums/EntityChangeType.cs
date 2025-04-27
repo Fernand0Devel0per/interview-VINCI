@@ -1,4 +1,4 @@
-namespace OrderService.CommandAPI.Application.Common;
+namespace BuildingBlocks.Core.Enums;
 
 public enum EntityChangeType
 {

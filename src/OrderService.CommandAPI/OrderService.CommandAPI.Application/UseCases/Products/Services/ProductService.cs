@@ -1,4 +1,5 @@
 using BuildingBlocks.Core.ApiResponses;
+using BuildingBlocks.Core.Enums;
 using OrderService.CommandAPI.Application.Common;
 using OrderService.CommandAPI.Application.UseCases.Products.DTOs;
 using OrderService.CommandAPI.Application.UseCases.Products.Mappings;

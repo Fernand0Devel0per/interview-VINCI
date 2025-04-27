@@ -2,7 +2,7 @@ using BuildingBlocks.Core.Interfaces;
 using MongoDB.Driver;
 using OrderService.QueryAPI.Domain.Repositories;
 
-namespace OrderService.QueryAPI.Infrastructure.Repositories;
+namespace OrderService.QueryAPI.Infrastructure.Repositories.Persistence.Mongo;
 
 public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity : IEntity
 {
@@ -33,5 +33,11 @@ public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity 
     {
         var filter = Builders<TEntity>.Filter.Eq(x => x.Id, id);
         await _collection.ReplaceOneAsync(filter, entity, cancellationToken: cancellationToken);
+    }
+    
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<TEntity>.Filter.Eq(x => x.Id, id);
+        await _collection.DeleteOneAsync(filter, cancellationToken);
     }
 }

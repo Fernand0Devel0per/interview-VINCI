@@ -1,3 +1,4 @@
+using BuildingBlocks.Core.Enums;
 using BuildingBlocks.Messaging.Abstractions;
 
 namespace OrderService.CommandAPI.Application.Common;
