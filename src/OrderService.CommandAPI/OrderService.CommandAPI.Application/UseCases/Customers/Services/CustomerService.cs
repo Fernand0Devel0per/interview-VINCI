@@ -31,8 +31,7 @@ public class CustomerService : ICustomerService
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Created,
             customer,
-            EventTopics.CustomerChanges,
-            cancellationToken
+            cancellationToken: cancellationToken
         );
         
         return ApiResponse<Guid>.Ok(customer.Id, "Customer created successfully.");
@@ -53,8 +52,7 @@ public class CustomerService : ICustomerService
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Updated,
             customer,
-            EventTopics.CustomerChanges,
-            cancellationToken
+            cancellationToken: cancellationToken
         );
         
         return ApiResponse<Guid>.Ok(customer.Id, "Customer updated successfully.");
@@ -73,8 +71,7 @@ public class CustomerService : ICustomerService
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Deleted,
             customer,
-            EventTopics.CustomerChanges,
-            cancellationToken
+            cancellationToken: cancellationToken
         );
         
         return ApiResponse<Guid>.Ok(id, "Customer deleted successfully.");

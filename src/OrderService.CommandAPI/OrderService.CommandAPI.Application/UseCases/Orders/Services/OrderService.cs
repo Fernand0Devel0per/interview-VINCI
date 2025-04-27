@@ -30,8 +30,7 @@ public class OrderService : IOrderService
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Created,
             order,
-            EventTopics.OrderChanges,
-            cancellationToken
+            cancellationToken: cancellationToken
         );
         
         return ApiResponse<Guid>.Ok(order.Id, "Order created successfully.");
@@ -47,8 +46,7 @@ public class OrderService : IOrderService
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Deleted,
             order,
-            EventTopics.OrderChanges,
-            cancellationToken
+            cancellationToken: cancellationToken
         );
         
         await _orderRepository.DeleteAsync(id, cancellationToken);

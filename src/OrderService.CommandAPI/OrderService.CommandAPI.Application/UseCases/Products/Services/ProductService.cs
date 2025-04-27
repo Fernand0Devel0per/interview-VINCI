@@ -30,8 +30,7 @@ public class ProductService : IProductService
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Created,
             product,
-            EventTopics.ProductChanges,
-            cancellationToken
+            cancellationToken: cancellationToken
         );
         
         return ApiResponse<Guid>.Ok(product.Id, "Product created successfully.");
@@ -52,8 +51,7 @@ public class ProductService : IProductService
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Updated,
             product,
-            EventTopics.ProductChanges,
-            cancellationToken
+            cancellationToken: cancellationToken
         );
         
         return ApiResponse<Guid>.Ok(product.Id, "Product updated successfully.");
@@ -72,8 +70,7 @@ public class ProductService : IProductService
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Deleted,
             product,
-            EventTopics.ProductChanges,
-            cancellationToken
+            cancellationToken: cancellationToken
         );
         
         return ApiResponse<Guid>.Ok(id, "Product deleted successfully.");
