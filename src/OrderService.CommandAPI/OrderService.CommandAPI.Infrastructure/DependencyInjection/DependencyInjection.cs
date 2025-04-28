@@ -43,6 +43,12 @@ namespace OrderService.CommandAPI.Infrastructure.DependencyInjection
                 userName: configuration["RabbitMq:UserName"],
                 password: configuration["RabbitMq:Password"]
             ));
+            
+            services.AddSingleton<IMessageConsumer>(sp => new RabbitMqConsumer(
+                hostName: configuration["RabbitMq:HostName"],
+                userName: configuration["RabbitMq:UserName"],
+                password: configuration["RabbitMq:Password"]
+            ));
             services.AddSingleton<IMessageBus, RabbitMqMessageBus>();
 
             services.AddFluentValidationAutoValidation();

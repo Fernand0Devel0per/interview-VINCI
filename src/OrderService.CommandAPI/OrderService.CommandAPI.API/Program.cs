@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OrderService.CommandAPI.API.Endpoints;
 using OrderService.CommandAPI.Infrastructure.Data;
 using OrderService.CommandAPI.Infrastructure.DependencyInjection;
 
@@ -17,6 +18,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.ConfigureCustomerEndpoints();
+app.ConfigureProductEndpoints();
+app.ConfigureOrderEndpoints();
 
 app.UseHttpsRedirection();
 app.Run();

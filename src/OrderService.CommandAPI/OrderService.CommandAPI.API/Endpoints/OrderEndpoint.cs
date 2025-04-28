@@ -9,6 +9,7 @@ public static class OrderEndpoint
     public static void ConfigureOrderEndpoints(this WebApplication app)
     {
         app.MapPost("/api/orders", CreateOrder)
+            .WithValidator<CreateOrderDto>() 
             .WithName("CreateOrder")
             .Accepts<CreateOrderDto>("application/json")
             .Produces(StatusCodes.Status201Created)

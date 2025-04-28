@@ -9,6 +9,7 @@ public static class CustomerEndpoint
     public static void ConfigureCustomerEndpoints(this WebApplication app)
     {
         app.MapPost("/api/customers", CreateCustomer)
+            .WithValidator<CreateCustomerDto>()
             .WithName("CreateCustomer")
             .Accepts<CreateCustomerDto>("application/json")
             .Produces(StatusCodes.Status201Created)
@@ -16,6 +17,7 @@ public static class CustomerEndpoint
             .Produces(StatusCodes.Status500InternalServerError);
 
         app.MapPut("/api/customers/{id}", UpdateCustomer)
+            .WithValidator<UpdateCustomerDto>()
             .WithName("UpdateCustomer")
             .Accepts<UpdateCustomerDto>("application/json")
             .Produces(StatusCodes.Status200OK)

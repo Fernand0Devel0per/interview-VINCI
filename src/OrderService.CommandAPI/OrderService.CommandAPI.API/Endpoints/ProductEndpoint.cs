@@ -9,6 +9,7 @@ public static class ProductEndpoint
     public static void ConfigureProductEndpoints(this WebApplication app)
     {
         app.MapPost("/api/products", CreateProduct)
+            .WithValidator<CreateProductDto>()
             .WithName("CreateProduct")
             .Accepts<CreateProductDto>("application/json")
             .Produces(StatusCodes.Status201Created)
@@ -16,6 +17,7 @@ public static class ProductEndpoint
             .Produces(StatusCodes.Status500InternalServerError);
 
         app.MapPut("/api/products/{id}", UpdateProduct)
+            .WithValidator<UpdateProductDto>()
             .WithName("UpdateProduct")
             .Accepts<UpdateProductDto>("application/json")
             .Produces(StatusCodes.Status200OK)
