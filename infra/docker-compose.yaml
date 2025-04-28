@@ -5,8 +5,8 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
     environment:
-      SA_PASSWORD: "YourStrong!Passw0rd"
-      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "${SA_PASSWORD}"
+      ACCEPT_EULA: "${ACCEPT_EULA}"
     ports:
       - "1433:1433"   
     networks:
@@ -16,8 +16,8 @@ services:
     image: mongo:7.0
     container_name: mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_USERNAME: "${MONGO_INITDB_ROOT_USERNAME}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_INITDB_ROOT_PASSWORD}"
     ports:
       - "27017:27017"
     networks:
@@ -35,8 +35,8 @@ services:
     image: rabbitmq:3.12-management
     container_name: rabbitmq
     environment:
-      RABBITMQ_DEFAULT_USER: dev
-      RABBITMQ_DEFAULT_PASS: 123456dev
+      RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
+      RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
     ports:
       - "5672:5672"   
       - "15672:15672" 
