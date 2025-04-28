@@ -23,13 +23,36 @@ public class RabbitMqProducer : IMessageProducer, IAsyncDisposable
         _channel = _connection.CreateChannelAsync().Result;
     }
 
-    public async Task PublishAsync<TMessage>(TMessage message, string topic, CancellationToken cancellationToken = default) where TMessage : class
+    public async Task PublishAsync<TMessage>(
+        TMessage message,
+        string topic,
+        CancellationToken cancellationToken = default
+    ) where TMessage : class
     {
         if (_channel is null)
             throw new InvalidOperationException("RabbitMQ channel is not initialized.");
 
-        await _channel.ExchangeDeclareAsync(exchange: topic, type: ExchangeType.Fanout, durable: true, autoDelete: false);
+        await _channel.ExchangeDeclareAsync(
+            exchange: topic,
+            type: ExchangeType.Fanout,
+            durable: true,
+            autoDelete: false
+        );
 
+        await _channel.QueueDeclareAsync(
+            queue: topic,
+            durable: true,
+            exclusive: false,
+            autoDelete: false
+        );
+
+
+        await _channel.QueueBindAsync(
+            queue: topic,
+            exchange: topic,
+            routingKey: string.Empty
+        );
+        
         var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
 
         await _channel.BasicPublishAsync(

@@ -24,15 +24,32 @@ public class RabbitMqConsumer : IMessageConsumer, IAsyncDisposable
         _channel = _connection.CreateChannelAsync().Result;
     }
 
-    public async Task SubscribeAsync<TMessage>(string topic, Func<TMessage, CancellationToken, Task> handler, CancellationToken cancellationToken = default) where TMessage : class
+    public async Task SubscribeAsync<TMessage>(
+        string topic,
+        Func<TMessage, CancellationToken, Task> handler,
+        CancellationToken cancellationToken = default,
+        string? queueName = null
+    ) where TMessage : class
     {
         if (_channel is null)
             throw new InvalidOperationException("RabbitMQ channel is not initialized.");
-
+        
         await _channel.ExchangeDeclareAsync(exchange: topic, type: ExchangeType.Fanout, durable: true, autoDelete: false);
-
-        var queueName = (await _channel.QueueDeclareAsync()).QueueName;
-        await _channel.QueueBindAsync(queue: queueName, exchange: topic, routingKey: string.Empty);
+        
+        queueName ??= topic;
+        
+        await _channel.QueueDeclareAsync(
+            queue: queueName,
+            durable: true,
+            exclusive: false,
+            autoDelete: false
+        );
+        
+        await _channel.QueueBindAsync(
+            queue: queueName,
+            exchange: topic,
+            routingKey: string.Empty
+        );
 
         var consumer = new AsyncEventingBasicConsumer(_channel);
 
@@ -62,7 +79,7 @@ public class RabbitMqConsumer : IMessageConsumer, IAsyncDisposable
             consumer: consumer
         );
 
-        Console.WriteLine($"[*] Waiting for messages on topic {topic}.");
+        Console.WriteLine($"[*] Waiting for messages on exchange '{topic}' and queue '{queueName}'.");
     }
 
     public async ValueTask DisposeAsync()

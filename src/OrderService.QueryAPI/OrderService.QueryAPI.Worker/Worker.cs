@@ -1,10 +1,8 @@
-using System.Text;
 using System.Text.Json;
 using BuildingBlocks.Messaging.Abstractions;
 using OrderService.CommandAPI.Application.Common;
 using OrderService.QueryAPI.Application.Common.Abstractions;
-using RabbitMQ.Client.Events;
-using RabbitMQ.Client;
+using Microsoft.Extensions.Configuration;
 
 namespace OrderService.QueryAPI.Worker;
 
@@ -12,55 +10,46 @@ public class Worker : BackgroundService
 {
     private readonly IMessageBus _messageBus;
     private readonly IEntityChangeDispatcher _dispatcher;
-    private readonly IChannel _channel;
+    private readonly IConfiguration _configuration;
 
-    public Worker(IMessageBus messageBus, IEntityChangeDispatcher dispatcher, IChannel  channel)
+    public Worker(IMessageBus messageBus, IEntityChangeDispatcher dispatcher, IConfiguration configuration)
     {
         _messageBus = messageBus;
         _dispatcher = dispatcher;
-        _channel = channel;
+        _configuration = configuration;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        Console.WriteLine("[*] Worker started, listening for messages...");
+        Console.WriteLine("[*] Worker started, waiting for messages...");
 
-        await _channel.BasicQosAsync(0, 1, false);
+        var exchangeName = _configuration["RabbitMq:ExchangeName"];
+        var queueName = _configuration["RabbitMq:QueueName"];
 
-        var consumer = new AsyncEventingBasicConsumer(_channel);
-
-        consumer.ReceivedAsync += async (sender, ea) =>
-        {
-            try
+        await _messageBus.SubscribeAsync<EntityChangedEvent<JsonElement>>(
+            topic: exchangeName,
+            handler: async (entityChangedEvent, cancellationToken) =>
             {
-                var messageJson = Encoding.UTF8.GetString(ea.Body.ToArray());
-                var entityChangedEvent = JsonSerializer.Deserialize<EntityChangedEvent<JsonElement>>(messageJson);
-
-                if (entityChangedEvent is null)
+                try
                 {
-                    Console.WriteLine("[!] Failed to deserialize EntityChangedEvent.");
-                    await _channel.BasicNackAsync(ea.DeliveryTag, multiple: false, requeue: false);
-                    return;
+                    Console.WriteLine($"[x] Received event for entity {entityChangedEvent.EntityType}");
+
+                    await _dispatcher.DispatchAsync(
+                        entityChangedEvent.EntityType,
+                        entityChangedEvent.Data.GetRawText(),
+                        entityChangedEvent.ChangeType,
+                        cancellationToken
+                    );
                 }
-
-                await _dispatcher.DispatchAsync(
-                    entityChangedEvent.EntityType,
-                    entityChangedEvent.Data.GetRawText(),
-                    entityChangedEvent.ChangeType,
-                    stoppingToken
-                );
-
-                await _channel.BasicAckAsync(ea.DeliveryTag, multiple: false);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[!] Error processing message: {ex.Message}");
-
-                await _channel.BasicNackAsync(ea.DeliveryTag, multiple: false, requeue: true);
-            }
-        };
-
-        await _channel.BasicConsumeAsync(queue: "entity-changes-queue", autoAck: false, consumer: consumer);
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[!] Error processing event: {ex.Message}");
+                    throw;
+                }
+            },
+            cancellationToken: stoppingToken,
+            queueName: queueName
+        );
 
         await Task.Delay(Timeout.Infinite, stoppingToken);
     }
