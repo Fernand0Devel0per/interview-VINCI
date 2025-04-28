@@ -8,6 +8,7 @@ public class UpdateProductDtoValidator : AbstractValidator<UpdateProductDto>
     public UpdateProductDtoValidator()
     {
         RuleFor(x => x.Name)
+            .NotEmpty().WithMessage("Name is required.")
             .MaximumLength(100).WithMessage("Name cannot exceed 100 characters.");
 
         RuleFor(x => x.Price)
