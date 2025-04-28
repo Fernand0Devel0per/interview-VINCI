@@ -1,13 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using OrderService.CommandAPI.Infrastructure.Data;
+using OrderService.CommandAPI.Infrastructure.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<CommandDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
+builder.Services.AddCommandServices(builder.Configuration);
+
 var app = builder.Build();
 
 

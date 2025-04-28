@@ -4,20 +4,19 @@ using OrderService.CommandAPI.Application.Common;
 using OrderService.CommandAPI.Application.UseCases.Products.DTOs;
 using OrderService.CommandAPI.Application.UseCases.Products.Mappings;
 using OrderService.CommandAPI.Domain.Repositories;
-using OrderService.CommandAPI.Infrastructure.Data;
 
 namespace OrderService.CommandAPI.Application.UseCases.Products.Services;
 
 public class ProductService : IProductService
 {
     private readonly IProductRepository _productRepository;
-    private readonly CommandDbContext _dbContext;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly EventPublisherService _eventPublisherService;
 
-    public ProductService(IProductRepository productRepository, CommandDbContext dbContext, EventPublisherService eventPublisherService)
+    public ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork, EventPublisherService eventPublisherService)
     {
         _productRepository = productRepository;
-        _dbContext = dbContext;
+        _unitOfWork = unitOfWork;
         _eventPublisherService = eventPublisherService;
     }
 
@@ -26,7 +25,7 @@ public class ProductService : IProductService
         var product = requestDto.ToEntity();
 
         await _productRepository.AddAsync(product, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Created,
@@ -47,7 +46,7 @@ public class ProductService : IProductService
         requestDto.UpdateEntity(product);
 
         await _productRepository.UpdateAsync(product, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Updated,
@@ -66,7 +65,7 @@ public class ProductService : IProductService
             return ApiResponse<string>.Fail(new List<string> { "Product not found" }, "Not Found");
 
         await _productRepository.DeleteAsync(id, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Deleted,

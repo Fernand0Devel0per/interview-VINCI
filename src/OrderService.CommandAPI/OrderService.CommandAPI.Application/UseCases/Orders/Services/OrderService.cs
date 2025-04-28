@@ -4,20 +4,18 @@ using OrderService.CommandAPI.Application.Common;
 using OrderService.CommandAPI.Application.UseCases.Orders.DTOs;
 using OrderService.CommandAPI.Application.UseCases.Orders.Mappings;
 using OrderService.CommandAPI.Domain.Repositories;
-using OrderService.CommandAPI.Infrastructure.Data;
 
 namespace OrderService.CommandAPI.Application.UseCases.Orders.Services;
-
 public class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderRepository;
-        private readonly CommandDbContext _dbContext;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly EventPublisherService _eventPublisherService;
     
-        public OrderService(IOrderRepository orderRepository, CommandDbContext dbContext, EventPublisherService eventPublisherService)
+        public OrderService(IOrderRepository orderRepository, IUnitOfWork unitOfWork, EventPublisherService eventPublisherService)
         {
             _orderRepository = orderRepository;
-            _dbContext = dbContext;
+            _unitOfWork = unitOfWork;
             _eventPublisherService = eventPublisherService;
         }
 
@@ -26,7 +24,7 @@ public class OrderService : IOrderService
         var order = requestDto.ToEntity();
 
         await _orderRepository.AddAsync(order, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Created,
@@ -51,7 +49,7 @@ public class OrderService : IOrderService
         );
         
         await _orderRepository.DeleteAsync(id, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return ApiResponse<Guid>.Ok(id, "Order deleted successfully.");
     }

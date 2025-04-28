@@ -1,24 +1,22 @@
 using BuildingBlocks.Core.ApiResponses;
 using BuildingBlocks.Core.Enums;
 using OrderService.CommandAPI.Application.Common;
-using OrderService.CommandAPI.Application.UseCases.Customers;
 using OrderService.CommandAPI.Application.UseCases.Customers.DTOs;
 using OrderService.CommandAPI.Application.UseCases.Customers.Mappings;
 using OrderService.CommandAPI.Domain.Repositories;
-using OrderService.CommandAPI.Infrastructure.Data;
 
 namespace OrderService.CommandAPI.Application.UseCases.Customers.Services;
 
 public class CustomerService : ICustomerService
 {
     private readonly ICustomerRepository _customerRepository;
-    private readonly CommandDbContext _dbContext;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly EventPublisherService _eventPublisherService;
 
-    public CustomerService(ICustomerRepository customerRepository, CommandDbContext dbContext, EventPublisherService eventPublisherService)
+    public CustomerService(ICustomerRepository customerRepository, IUnitOfWork unitOfWork, EventPublisherService eventPublisherService)
     {
         _customerRepository = customerRepository;
-        _dbContext = dbContext;
+        _unitOfWork = unitOfWork;
         _eventPublisherService = eventPublisherService;
     }
 
@@ -27,7 +25,7 @@ public class CustomerService : ICustomerService
         var customer = requestDto.ToEntity();
 
         await _customerRepository.AddAsync(customer, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Created,
@@ -48,7 +46,7 @@ public class CustomerService : ICustomerService
         requestDto.UpdateEntity(customer);
 
         await _customerRepository.UpdateAsync(customer, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Updated,
@@ -67,7 +65,7 @@ public class CustomerService : ICustomerService
             return ApiResponse<string>.Fail(new List<string> { "Customer not found" }, "Not Found");
 
         await _customerRepository.DeleteAsync(id, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         await _eventPublisherService.PublishEntityChangedEventAsync(
             EntityChangeType.Deleted,
