@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using OrderService.QueryAPI.Application.UseCases.Orders.Services;
-using OrderService.QueryAPI.Application.UseCases.Orders.DTOs;
 using BuildingBlocks.Core.ApiResponses;
 using OrderService.QueryAPI.Application.UseCases.Orders.Dtos;
 

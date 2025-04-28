@@ -9,9 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Core\BuildingBlocks.Core.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Messaging\BuildingBlocks.Messaging.csproj" />
-    <ProjectReference Include="..\..\OrderService.CommandAPI\OrderService.CommandAPI.Application\OrderService.CommandAPI.Application.csproj" />
-    <ProjectReference Include="..\..\OrderService.CommandAPI\OrderService.CommandAPI.Domain\OrderService.CommandAPI.Domain.csproj" />
-    <ProjectReference Include="..\..\OrderService.CommandAPI\OrderService.CommandAPI.Infrastructure\OrderService.CommandAPI.Infrastructure.csproj" />
+    <ProjectReference Include="..\OrderService.QueryAPI.Application\OrderService.QueryAPI.Application.csproj" />
     <ProjectReference Include="..\OrderService.QueryAPI.Domain\OrderService.QueryAPI.Domain.csproj" />
   </ItemGroup>
 
@@ -22,6 +20,9 @@
   <ItemGroup>
     <Reference Include="Microsoft.Extensions.Configuration.Abstractions">
       <HintPath>..\..\..\..\..\..\.nuget\packages\microsoft.extensions.configuration.abstractions\8.0.0\lib\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\8.0.2\lib\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
   </ItemGroup>
 
