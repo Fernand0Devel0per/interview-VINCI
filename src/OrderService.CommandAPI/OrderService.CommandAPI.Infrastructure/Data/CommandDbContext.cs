@@ -22,5 +22,21 @@ public class CommandDbContext : DbContext, IUnitOfWork
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<OrderProduct>()
+            .HasKey(op => new { op.OrderId, op.ProductId });
+
+        modelBuilder.Entity<OrderProduct>()
+            .HasOne<Order>()
+            .WithMany(o => o.OrderProducts)
+            .HasForeignKey(op => op.OrderId);
+
+        modelBuilder.Entity<OrderProduct>()
+            .HasOne<Product>()
+            .WithMany()
+            .HasForeignKey(op => op.ProductId);
+    
+        modelBuilder.Entity<Order>()
+            .Ignore(o => o.Products);
     }
 }

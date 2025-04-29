@@ -8,4 +8,11 @@ namespace OrderService.CommandAPI.Infrastructure.Repositories;
 public class ProductRepository : SqlRepository<Product>, IProductRepository
 {
     public ProductRepository(CommandDbContext dbContext) : base(dbContext) { }
+    
+    public async Task<List<Product>> GetByIdsAsync(List<Guid> ids, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet
+            .Where(p => ids.Contains(p.Id))
+            .ToListAsync(cancellationToken);
+    }
 }

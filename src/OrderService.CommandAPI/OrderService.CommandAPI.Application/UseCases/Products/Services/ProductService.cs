@@ -23,7 +23,6 @@ public class ProductService : IProductService
     public async Task<IApiResponse> CreateProductAsync(CreateProductDto requestDto, CancellationToken cancellationToken = default)
     {
         var product = requestDto.ToEntity();
-
         await _productRepository.AddAsync(product, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
