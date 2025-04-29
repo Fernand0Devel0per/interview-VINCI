@@ -2,32 +2,50 @@ using Microsoft.EntityFrameworkCore;
 using OrderService.CommandAPI.API.Configurations;
 using OrderService.CommandAPI.API.Endpoints;
 using OrderService.CommandAPI.API.Middlewares;
-using OrderService.CommandAPI.Infrastructure.Data;
 using OrderService.CommandAPI.Infrastructure.DependencyInjection;
+using Serilog;
+using BuildingBlocks.Logging.LoggingConfiguration;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = SerilogConfiguration.CreateLogger();
 
-builder.Services.AddSwaggerConfiguration();
-builder.Services.AddCommandServices(builder.Configuration);
-
-var app = builder.Build();
-
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    Log.Information("Starting OrderService.CommandAPI");
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Host.UseSerilog(Log.Logger);
+
+    builder.Services.AddSwaggerConfiguration();
+    builder.Services.AddCommandServices(builder.Configuration);
+
+    var app = builder.Build();
+
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+    if (app.Environment.IsDevelopment())
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "OrderService Command API");
-        c.RoutePrefix = "swagger";
-    });
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "OrderService Command API");
+            c.RoutePrefix = "swagger";
+        });
+    }
+
+    app.UseHttpsRedirection();
+
+    app.ConfigureCustomerEndpoints();
+    app.ConfigureProductEndpoints();
+    app.ConfigureOrderEndpoints();
+
+    app.Run();
 }
-
-app.ConfigureCustomerEndpoints();
-app.ConfigureProductEndpoints();
-app.ConfigureOrderEndpoints();
-
-app.UseHttpsRedirection();
-app.Run();
-
+catch (Exception ex)
+{
+    Log.Fatal(ex, "OrderService.CommandAPI terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

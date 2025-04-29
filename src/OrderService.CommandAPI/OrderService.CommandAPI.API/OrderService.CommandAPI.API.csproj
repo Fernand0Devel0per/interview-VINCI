@@ -10,12 +10,14 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.15" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Messaging\BuildingBlocks.Messaging.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Core\BuildingBlocks.Core.csproj" />
+        <ProjectReference Include="..\..\BuildingBlocks\BuildingBlocks.Logging\BuildingBlocks.Logging.csproj" />
     <ProjectReference Include="..\OrderService.CommandAPI.Application\OrderService.CommandAPI.Application.csproj" />
     <ProjectReference Include="..\OrderService.CommandAPI.Infrastructure\OrderService.CommandAPI.Infrastructure.csproj" />
     <ProjectReference Include="..\OrderService.CommandAPI.Domain\OrderService.CommandAPI.Domain.csproj" />
