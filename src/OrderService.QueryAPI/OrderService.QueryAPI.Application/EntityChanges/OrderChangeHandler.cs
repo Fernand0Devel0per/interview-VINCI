@@ -25,11 +25,10 @@ public class OrderChangeHandler : IEntityChangeHandler
         switch (changeType)
         {
             case EntityChangeType.Created:
-                await _orderRepository.AddAsync(order, cancellationToken);
-                break;
             case EntityChangeType.Updated:
-                await _orderRepository.UpdateAsync(order.Id, order, cancellationToken);
+                await _orderRepository.UpsertAsync(order, cancellationToken);
                 break;
+
             case EntityChangeType.Deleted:
                 await _orderRepository.DeleteAsync(order.Id, cancellationToken);
                 break;

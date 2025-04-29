@@ -24,15 +24,11 @@ public class MongoRepository<TEntity> : IMongoRepository<TEntity> where TEntity 
         return await _collection.Find(_ => true).ToListAsync(cancellationToken);
     }
 
-    public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public async Task UpsertAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        await _collection.InsertOneAsync(entity, cancellationToken: cancellationToken);
-    }
-
-    public async Task UpdateAsync(Guid id, TEntity entity, CancellationToken cancellationToken = default)
-    {
-        var filter = Builders<TEntity>.Filter.Eq(x => x.Id, id);
-        await _collection.ReplaceOneAsync(filter, entity, cancellationToken: cancellationToken);
+        var filter = Builders<TEntity>.Filter.Eq(x => x.Id, entity.Id);
+        var options = new ReplaceOptions { IsUpsert = true };
+        await _collection.ReplaceOneAsync(filter, entity, options, cancellationToken);
     }
     
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)

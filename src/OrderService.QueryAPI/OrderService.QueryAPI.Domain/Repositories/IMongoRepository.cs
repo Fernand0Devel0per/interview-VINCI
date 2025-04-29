@@ -6,7 +6,6 @@ public interface IMongoRepository<TEntity> where TEntity : IEntity
 {
     Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
-    Task UpdateAsync(Guid id, TEntity entity, CancellationToken cancellationToken = default);
+    Task UpsertAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }

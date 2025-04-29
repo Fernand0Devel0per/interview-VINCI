@@ -25,10 +25,8 @@ public class ProductChangeHandler : IEntityChangeHandler
         switch (changeType)
         {
             case EntityChangeType.Created:
-                await _productRepository.AddAsync(product, cancellationToken);
-                break;
             case EntityChangeType.Updated:
-                await _productRepository.UpdateAsync(product.Id, product, cancellationToken);
+                await _productRepository.UpsertAsync(product, cancellationToken);
                 break;
             case EntityChangeType.Deleted:
                 await _productRepository.DeleteAsync(product.Id, cancellationToken);

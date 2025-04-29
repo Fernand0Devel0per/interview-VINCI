@@ -25,10 +25,8 @@ public class CustomerChangeHandler : IEntityChangeHandler
         switch (changeType)
         {
             case EntityChangeType.Created:
-                await _customerRepository.AddAsync(customer, cancellationToken);
-                break;
             case EntityChangeType.Updated:
-                await _customerRepository.UpdateAsync(customer.Id, customer, cancellationToken);
+                await _customerRepository.UpsertAsync(customer, cancellationToken);
                 break;
             case EntityChangeType.Deleted:
                 await _customerRepository.DeleteAsync(customer.Id, cancellationToken);
