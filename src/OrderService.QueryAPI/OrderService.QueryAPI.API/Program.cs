@@ -1,6 +1,7 @@
 using MongoDB.Driver;
 using OrderService.QueryAPI.API.Configurations;
 using OrderService.QueryAPI.API.Endpoints;
+using OrderService.QueryAPI.API.Middlewares;
 using OrderService.QueryAPI.Infrastructure.Data;
 using OrderService.QueryAPI.Infrastructure.DependencyInjection;
 
@@ -10,6 +11,8 @@ builder.Services.AddQueryServices(builder.Configuration);
 builder.Services.AddSwaggerConfiguration();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

@@ -36,18 +36,11 @@ public static class CustomerEndpoint
     /// <param name="customerService">The customer service.</param>
     /// <param name="createDto">Customer details to create.</param>
     /// <returns>The result of the creation.</returns>
-    private async static Task<IResult> CreateCustomer(ICustomerService customerService, [FromBody] CreateCustomerDto createDto)
+    private async static Task<IResult> CreateCustomer(ICustomerService customerService,
+        [FromBody] CreateCustomerDto createDto)
     {
-        try
-        {
-            var response = await customerService.CreateCustomerAsync(createDto);
-            return Results.Created($"/api/customers/{((dynamic)response).Data}", response);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[!] Error: {ex.Message}");
-            return Results.StatusCode(StatusCodes.Status500InternalServerError);
-        }
+        var response = await customerService.CreateCustomerAsync(createDto);
+        return Results.Created($"/api/customers/{((dynamic)response).Data}", response);
     }
 
     /// <summary>
@@ -57,18 +50,11 @@ public static class CustomerEndpoint
     /// <param name="id">The customer ID.</param>
     /// <param name="updateDto">Customer updated details.</param>
     /// <returns>The result of the update.</returns>
-    private async static Task<IResult> UpdateCustomer(ICustomerService customerService, [FromRoute] Guid id, [FromBody] UpdateCustomerDto updateDto)
+    private async static Task<IResult> UpdateCustomer(ICustomerService customerService, [FromRoute] Guid id,
+        [FromBody] UpdateCustomerDto updateDto)
     {
-        try
-        {
-            var response = await customerService.UpdateCustomerAsync(id, updateDto);
-            return Results.Ok(response);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[!] Error: {ex.Message}");
-            return Results.StatusCode(StatusCodes.Status500InternalServerError);
-        }
+        var response = await customerService.UpdateCustomerAsync(id, updateDto);
+        return Results.Ok(response);
     }
 
     /// <summary>
@@ -79,15 +65,7 @@ public static class CustomerEndpoint
     /// <returns>The result of the deletion.</returns>
     private async static Task<IResult> DeleteCustomer(ICustomerService customerService, [FromRoute] Guid id)
     {
-        try
-        {
             var response = await customerService.DeleteCustomerAsync(id);
             return Results.Ok(response);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[!] Error: {ex.Message}");
-            return Results.StatusCode(StatusCodes.Status500InternalServerError);
-        }
     }
 }

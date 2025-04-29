@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using OrderService.CommandAPI.API.Configurations;
 using OrderService.CommandAPI.API.Endpoints;
+using OrderService.CommandAPI.API.Middlewares;
 using OrderService.CommandAPI.Infrastructure.Data;
 using OrderService.CommandAPI.Infrastructure.DependencyInjection;
 
@@ -11,6 +12,7 @@ builder.Services.AddCommandServices(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
