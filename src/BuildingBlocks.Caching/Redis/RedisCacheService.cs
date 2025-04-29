@@ -7,10 +7,9 @@ namespace BuildingBlocks.Caching.Redis;
 public class RedisCacheService : ICacheService
 {
     private readonly IDatabase _database;
-
-    public RedisCacheService(string connectionString)
+    
+    public RedisCacheService(IConnectionMultiplexer connection)
     {
-        var connection = ConnectionMultiplexer.Connect(connectionString);
         _database = connection.GetDatabase();
     }
 

@@ -1,4 +1,5 @@
 using System.Text.Json;
+using BuildingBlocks.Caching.Abstractions;
 using BuildingBlocks.Core.Enums;
 using OrderService.QueryAPI.Application.Common.Abstractions;
 using OrderService.QueryAPI.Domain.Entities;
@@ -9,10 +10,12 @@ namespace OrderService.QueryAPI.Application.EntityChanges;
 public class OrderChangeHandler : IEntityChangeHandler
 {
     private readonly IOrderMongoRepository _orderRepository;
+    private readonly ICacheService _cacheService;
 
-    public OrderChangeHandler(IOrderMongoRepository orderRepository)
+    public OrderChangeHandler(IOrderMongoRepository orderRepository, ICacheService cacheService)
     {
         _orderRepository = orderRepository;
+        _cacheService = cacheService;
     }
 
     public async Task HandleAsync(string rawData, EntityChangeType changeType, CancellationToken cancellationToken)
@@ -33,5 +36,7 @@ public class OrderChangeHandler : IEntityChangeHandler
                 await _orderRepository.DeleteAsync(order.Id, cancellationToken);
                 break;
         }
+        
+        await _cacheService.RemoveAsync($"order:{order.Id}", cancellationToken);
     }
 }

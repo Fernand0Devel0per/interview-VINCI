@@ -1,3 +1,5 @@
+using BuildingBlocks.Caching.Abstractions;
+using BuildingBlocks.Caching.Redis;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using OrderService.QueryAPI.Application.UseCases.Customers.Services;
@@ -10,6 +12,7 @@ using BuildingBlocks.Messaging.Abstractions;
 using BuildingBlocks.Messaging.RabbitMq;
 using Microsoft.Extensions.DependencyInjection;
 using OrderService.QueryAPI.Application.EntityChanges;
+using StackExchange.Redis;
 
 
 namespace OrderService.QueryAPI.Infrastructure.DependencyInjection
@@ -33,7 +36,8 @@ namespace OrderService.QueryAPI.Infrastructure.DependencyInjection
                 return client.GetDatabase(databaseName);
             });
 
-            //services.AddStackExchangeRedisCache(options => options.Configuration = configuration["Redis:ConnectionString"]);
+            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(configuration["Redis:ConnectionString"]));
+            services.AddSingleton<ICacheService, RedisCacheService>();
             
             services.AddScoped<ICustomerMongoRepository, CustomerMongoRepository>();
             services.AddScoped<IProductMongoRepository, ProductMongoRepository>();
@@ -62,6 +66,9 @@ namespace OrderService.QueryAPI.Infrastructure.DependencyInjection
                 var databaseName = configuration["MongoDb:DatabaseName"];
                 return client.GetDatabase(databaseName);
             });
+            
+            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(configuration["Redis:ConnectionString"]));
+            services.AddSingleton<ICacheService, RedisCacheService>();
             
             services.AddScoped<ICustomerMongoRepository, CustomerMongoRepository>();
             services.AddScoped<IProductMongoRepository, ProductMongoRepository>();

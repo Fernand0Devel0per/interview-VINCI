@@ -1,3 +1,4 @@
+using BuildingBlocks.Caching.Abstractions;
 using BuildingBlocks.Core.ApiResponses;
 using OrderService.QueryAPI.Application.UseCases.Products.Dtos;
 using OrderService.QueryAPI.Application.UseCases.Products.Mappings;
@@ -8,20 +9,31 @@ namespace OrderService.QueryAPI.Application.UseCases.Products.Services;
 public class ProductQueryService : IProductQueryService
 {
     private readonly IProductMongoRepository _productRepository;
+    private readonly ICacheService _cacheService;
 
-    public ProductQueryService(IProductMongoRepository productReadRepository)
+    public ProductQueryService(IProductMongoRepository productRepository, ICacheService cacheService)
     {
-        _productRepository = productReadRepository;
+        _productRepository = productRepository;
+        _cacheService = cacheService;
     }
 
     public async Task<IApiResponse> GetProductByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
+        string cacheKey = $"product:{id}";
+
+        var cachedProduct = await _cacheService.GetAsync<ProductResponseDto>(cacheKey, cancellationToken);
+        if (cachedProduct is not null)
+            return ApiResponse<ProductResponseDto>.Ok(cachedProduct);
+
         var product = await _productRepository.GetByIdAsync(id, cancellationToken);
 
         if (product is null)
             return ApiResponse<string>.Fail(new List<string> { "Product not found" }, "Not Found");
 
-        return ApiResponse<ProductResponseDto>.Ok(product.ToResponseDto(), "Product retrieved successfully.");
+        var responseDto = product.ToResponseDto();
+        await _cacheService.SetAsync(cacheKey, responseDto, TimeSpan.FromMinutes(10), cancellationToken);
+
+        return ApiResponse<ProductResponseDto>.Ok(responseDto, "Product retrieved successfully.");
     }
 
     public async Task<IApiResponse> GetAllProductsAsync(CancellationToken cancellationToken = default)
