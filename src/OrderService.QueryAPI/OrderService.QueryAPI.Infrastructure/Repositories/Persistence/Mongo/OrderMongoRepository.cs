@@ -6,5 +6,5 @@ namespace OrderService.QueryAPI.Infrastructure.Repositories.Persistence.Mongo;
 
 public class OrderMongoRepository : MongoRepository<Order>, IOrderMongoRepository
 {
-    public OrderMongoRepository(IMongoDatabase database) : base(database, "Customers") { }
+    public OrderMongoRepository(IMongoDatabase database) : base(database, "Order") { }
 }

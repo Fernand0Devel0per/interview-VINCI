@@ -1,21 +1,18 @@
 using System.Text.Json;
+using BuildingBlocks.Core.Events;
 using BuildingBlocks.Messaging.Abstractions;
-using OrderService.CommandAPI.Application.Common;
 using OrderService.QueryAPI.Application.Common.Abstractions;
-using Microsoft.Extensions.Configuration;
-
-namespace OrderService.QueryAPI.Worker;
 
 public class Worker : BackgroundService
 {
     private readonly IMessageBus _messageBus;
-    private readonly IEntityChangeDispatcher _dispatcher;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IConfiguration _configuration;
 
-    public Worker(IMessageBus messageBus, IEntityChangeDispatcher dispatcher, IConfiguration configuration)
+    public Worker(IMessageBus messageBus, IServiceScopeFactory serviceScopeFactory, IConfiguration configuration)
     {
         _messageBus = messageBus;
-        _dispatcher = dispatcher;
+        _serviceScopeFactory = serviceScopeFactory;
         _configuration = configuration;
     }
 
@@ -30,11 +27,14 @@ public class Worker : BackgroundService
             topic: exchangeName,
             handler: async (entityChangedEvent, cancellationToken) =>
             {
+                using var scope = _serviceScopeFactory.CreateScope();
+                var dispatcher = scope.ServiceProvider.GetRequiredService<IEntityChangeDispatcher>();
+
                 try
                 {
                     Console.WriteLine($"[x] Received event for entity {entityChangedEvent.EntityType}");
 
-                    await _dispatcher.DispatchAsync(
+                    await dispatcher.DispatchAsync(
                         entityChangedEvent.EntityType,
                         entityChangedEvent.Data.GetRawText(),
                         entityChangedEvent.ChangeType,

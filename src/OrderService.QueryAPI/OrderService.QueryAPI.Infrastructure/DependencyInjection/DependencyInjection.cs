@@ -43,15 +43,49 @@ namespace OrderService.QueryAPI.Infrastructure.DependencyInjection
             services.AddScoped<IProductQueryService, ProductQueryService>();
             services.AddScoped<IOrderQueryService, OrderQueryService>();
             
+            return services;
+        }
+        
+        public static IServiceCollection AddWorkerServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            
+            services.AddSingleton<IMongoClient>(sp =>
+            {
+                var connectionString = configuration["MongoDb:ConnectionString"];
+                return new MongoClient(connectionString);
+            });
+
+            services.AddScoped(sp =>
+            {
+                var client = sp.GetRequiredService<IMongoClient>();
+                var databaseName = configuration["MongoDb:DatabaseName"];
+                return client.GetDatabase(databaseName);
+            });
+            
+            services.AddScoped<ICustomerMongoRepository, CustomerMongoRepository>();
+            services.AddScoped<IProductMongoRepository, ProductMongoRepository>();
+            services.AddScoped<IOrderMongoRepository, OrderMongoRepository>();
+
+            services.AddScoped<CustomerChangeHandler>();
+            services.AddScoped<ProductChangeHandler>();
+            services.AddScoped<OrderChangeHandler>();
+            
             services.AddScoped<IEntityChangeDispatcher, EntityChangeDispatcher>();
             
+            services.AddSingleton<IMessageProducer>(sp => new RabbitMqProducer(
+                hostName: configuration["RabbitMq:HostName"],
+                userName: configuration["RabbitMq:UserName"],
+                password: configuration["RabbitMq:Password"]
+            ));
+
             services.AddSingleton<IMessageConsumer>(sp => new RabbitMqConsumer(
                 hostName: configuration["RabbitMq:HostName"],
                 userName: configuration["RabbitMq:UserName"],
                 password: configuration["RabbitMq:Password"]
             ));
-            services.AddSingleton<IMessageBus, RabbitMqMessageBus>();
 
+            services.AddSingleton<IMessageBus, RabbitMqMessageBus>();
 
             return services;
         }

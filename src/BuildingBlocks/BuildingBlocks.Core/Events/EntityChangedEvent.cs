@@ -1,6 +1,6 @@
 using BuildingBlocks.Core.Enums;
 
-namespace OrderService.CommandAPI.Application.Common;
+namespace BuildingBlocks.Core.Events;
 
 public class EntityChangedEvent<T>
 {

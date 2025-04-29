@@ -6,5 +6,5 @@ namespace OrderService.QueryAPI.Infrastructure.Repositories.Persistence.Mongo;
 
 public class ProductMongoRepository : MongoRepository<Product>, IProductMongoRepository
 {
-    public ProductMongoRepository(IMongoDatabase database) : base(database, "Customers") { }
+    public ProductMongoRepository(IMongoDatabase database) : base(database, "Product") { }
 }

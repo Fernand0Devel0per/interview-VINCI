@@ -1,7 +1,13 @@
-using OrderService.QueryAPI.Worker;
+using OrderService.QueryAPI.Infrastructure.DependencyInjection;
 
-var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddHostedService<Worker>();
+var builder = Host.CreateDefaultBuilder(args)
+    .ConfigureServices((hostContext, services) =>
+    {
+        IConfiguration configuration = hostContext.Configuration;
+        
+        services.AddWorkerServices(configuration);
+        
+        services.AddHostedService<Worker>();
+    });
 
-var host = builder.Build();
-host.Run();
+await builder.RunConsoleAsync();
