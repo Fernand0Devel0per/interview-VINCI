@@ -1,24 +1,27 @@
 using MongoDB.Driver;
+using OrderService.QueryAPI.API.Configurations;
 using OrderService.QueryAPI.API.Endpoints;
 using OrderService.QueryAPI.Infrastructure.Data;
 using OrderService.QueryAPI.Infrastructure.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddQueryServices(builder.Configuration);
+builder.Services.AddSwaggerConfiguration();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "rderService Query API");
+        c.RoutePrefix = "swagger";
+    });
 }
 
 app.UseHttpsRedirection();
-
 
 app.ConfigureCustomerEndpoints();
 app.ConfigureProductEndpoints();
