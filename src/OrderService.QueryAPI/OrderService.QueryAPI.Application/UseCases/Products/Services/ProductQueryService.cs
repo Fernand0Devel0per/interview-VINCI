@@ -17,7 +17,7 @@ public class ProductQueryService : IProductQueryService
         _cacheService = cacheService;
     }
 
-    public async Task<IApiResponse> GetProductByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<ProductResponseDto>> GetProductByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         string cacheKey = $"product:{id}";
 
@@ -28,7 +28,7 @@ public class ProductQueryService : IProductQueryService
         var product = await _productRepository.GetByIdAsync(id, cancellationToken);
 
         if (product is null)
-            return ApiResponse<string>.Fail(new List<string> { "Product not found" }, "Not Found");
+            return ApiResponse<ProductResponseDto>.Fail(new List<string> { "Product not found" }, "Not Found");
 
         var responseDto = product.ToResponseDto();
         await _cacheService.SetAsync(cacheKey, responseDto, TimeSpan.FromMinutes(10), cancellationToken);
@@ -36,7 +36,7 @@ public class ProductQueryService : IProductQueryService
         return ApiResponse<ProductResponseDto>.Ok(responseDto, "Product retrieved successfully.");
     }
 
-    public async Task<IApiResponse> GetAllProductsAsync(CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<List<ProductResponseDto>>> GetAllProductsAsync(CancellationToken cancellationToken = default)
     {
         var products = await _productRepository.GetAllAsync(cancellationToken);
 

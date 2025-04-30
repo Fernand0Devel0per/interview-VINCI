@@ -51,7 +51,7 @@ public class CustomerServiceTests
 
         // Assert
         result.Should().BeOfType<ApiResponse<string>>()
-              .Which.Success.Should().BeFalse();
+              .Which.IsSuccess.Should().BeFalse();
     }
 
     [Fact]
@@ -86,7 +86,7 @@ public class CustomerServiceTests
         var result = await _service.DeleteCustomerAsync(id);
 
         result.Should().BeOfType<ApiResponse<string>>()
-              .Which.Success.Should().BeFalse();
+              .Which.IsSuccess.Should().BeFalse();
     }
 
     [Fact]
