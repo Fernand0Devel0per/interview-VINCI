@@ -15,7 +15,17 @@ try
     var builder = WebApplication.CreateBuilder(args);
     
     builder.Host. UseSerilog(logger);
-
+    
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowGateway", policy =>
+        {
+            policy
+                .WithOrigins("http://localhost:5000") // ou AllowAnyOrigin() se estiver testando
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    });
     builder.Services.AddQueryServices(builder.Configuration);
     builder.Services.AddSwaggerConfiguration();
 
@@ -32,7 +42,7 @@ try
             c.RoutePrefix = "swagger";
         });
     }
-
+    app.UseCors("AllowGateway");
     app.UseHttpsRedirection();
 
     app.ConfigureCustomerEndpoints();
