@@ -12,13 +12,13 @@ public class OrderService : IOrderService
     private readonly IProductRepository _productRepository;
     private readonly ICustomerRepository _customerRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly EventPublisherService _eventPublisherService;
+    private readonly IEventPublisherService _eventPublisherService;
     
     public OrderService(
         IOrderRepository orderRepository,
         IProductRepository productRepository,
         IUnitOfWork unitOfWork,
-        EventPublisherService eventPublisherService, 
+        IEventPublisherService eventPublisherService, 
         ICustomerRepository customerRepository)
     {
         _orderRepository = orderRepository;

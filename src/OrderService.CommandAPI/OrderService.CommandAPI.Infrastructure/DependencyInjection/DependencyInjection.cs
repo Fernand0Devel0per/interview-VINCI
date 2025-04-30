@@ -36,7 +36,7 @@ namespace OrderService.CommandAPI.Infrastructure.DependencyInjection
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IOrderService, Application.UseCases.Orders.Services.OrderService>();
             
-            services.AddScoped<EventPublisherService>();
+            services.AddScoped<IEventPublisherService,EventPublisherService>();
             
             services.AddSingleton<IMessageProducer>(sp => new RabbitMqProducer(
                 hostName: configuration["RabbitMq:HostName"],

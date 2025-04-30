@@ -11,9 +11,9 @@ public class ProductService : IProductService
 {
     private readonly IProductRepository _productRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly EventPublisherService _eventPublisherService;
+    private readonly IEventPublisherService _eventPublisherService;
 
-    public ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork, EventPublisherService eventPublisherService)
+    public ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork, IEventPublisherService eventPublisherService)
     {
         _productRepository = productRepository;
         _unitOfWork = unitOfWork;

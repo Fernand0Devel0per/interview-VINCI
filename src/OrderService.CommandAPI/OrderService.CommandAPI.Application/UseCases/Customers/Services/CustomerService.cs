@@ -11,9 +11,9 @@ public class CustomerService : ICustomerService
 {
     private readonly ICustomerRepository _customerRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly EventPublisherService _eventPublisherService;
+    private readonly IEventPublisherService _eventPublisherService;
 
-    public CustomerService(ICustomerRepository customerRepository, IUnitOfWork unitOfWork, EventPublisherService eventPublisherService)
+    public CustomerService(ICustomerRepository customerRepository, IUnitOfWork unitOfWork, IEventPublisherService eventPublisherService)
     {
         _customerRepository = customerRepository;
         _unitOfWork = unitOfWork;
