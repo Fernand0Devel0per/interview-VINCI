@@ -5,10 +5,10 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
     environment:
-      SA_PASSWORD: "${SA_PASSWORD}"
-      ACCEPT_EULA: "${ACCEPT_EULA}"
+      SA_PASSWORD: ${DB_SA_PASSWORD}
+      ACCEPT_EULA: ${ACCEPT_EULA}
     ports:
-      - "1433:1433"   
+      - "1433:1433"
     networks:
       - backend
 
@@ -16,8 +16,8 @@ services:
     image: mongo:7.0
     container_name: mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: "${MONGO_INITDB_ROOT_USERNAME}"
-      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_INITDB_ROOT_PASSWORD}"
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
     ports:
       - "27017:27017"
     networks:
@@ -27,7 +27,7 @@ services:
     image: redis:7.2
     container_name: redis
     ports:
-      - "6379:6379"   
+      - "6379:6379"
     networks:
       - backend
 
@@ -35,11 +35,61 @@ services:
     image: rabbitmq:3.12-management
     container_name: rabbitmq
     environment:
-      RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
-      RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
     ports:
-      - "5672:5672"   
-      - "15672:15672" 
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - backend
+
+  orders-command-api:
+    build:
+      context: ../../src
+      dockerfile: OrderService.CommandAPI/OrderService.CommandAPI.API/Dockerfile
+    container_name: orders-command-api
+    ports:
+      - "8080:80"
+    depends_on:
+      - sqlserver
+      - rabbitmq
+    networks:
+      - backend
+
+  orders-query-api:
+    build:
+      context: ../../src
+      dockerfile: OrderService.QueryAPI/OrderService.QueryAPI.API/Dockerfile
+    container_name: orders-query-api
+    ports:
+      - "8081:80"
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - backend
+
+  orders-worker:
+    build:
+      context: ../../src
+      dockerfile: OrderService.QueryAPI/OrderService.QueryAPI.Worker/Dockerfile
+    container_name: orders-worker
+    depends_on:
+      - mongodb
+      - rabbitmq
+    networks:
+      - backend
+
+  api-gateway:
+    build:
+      context: ../../src
+      dockerfile: Gateway/OcelotApiGateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8082:80"
+    depends_on:
+      - orders-command-api
+      - orders-query-api
     networks:
       - backend
 
