@@ -7,48 +7,48 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-      <p className="text-muted-foreground">Welcome to your Order Management System dashboard</p>
+      <p className="text-muted-foreground">Bem-vindo ao seu sistema de gerenciamento de pedidos</p>
 
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+          <TabsTrigger value="analytics">Análises</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-3">
             <Link href="/customers">
               <Card className="hover:bg-muted/50 transition-colors">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Customers</CardTitle>
+                  <CardTitle className="text-sm font-medium">Clientes</CardTitle>
                   <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">Manage Customers</div>
-                  <p className="text-xs text-muted-foreground">View, create, update, and delete customers</p>
+                  <div className="text-2xl font-bold">Gerenciar Clientes</div>
+                  <p className="text-xs text-muted-foreground">Visualizar, criar, atualizar e excluir clientes</p>
                 </CardContent>
               </Card>
             </Link>
             <Link href="/products">
               <Card className="hover:bg-muted/50 transition-colors">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Products</CardTitle>
+                  <CardTitle className="text-sm font-medium">Produtos</CardTitle>
                   <Package className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">Manage Products</div>
-                  <p className="text-xs text-muted-foreground">View, create, update, and delete products</p>
+                  <div className="text-2xl font-bold">Gerenciar Produtos</div>
+                  <p className="text-xs text-muted-foreground">Visualizar, criar, atualizar e excluir produtos</p>
                 </CardContent>
               </Card>
             </Link>
             <Link href="/orders">
               <Card className="hover:bg-muted/50 transition-colors">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Orders</CardTitle>
+                  <CardTitle className="text-sm font-medium">Pedidos</CardTitle>
                   <ShoppingCart className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">Manage Orders</div>
-                  <p className="text-xs text-muted-foreground">View, create, and delete orders</p>
+                  <div className="text-2xl font-bold">Gerenciar Pedidos</div>
+                  <p className="text-xs text-muted-foreground">Visualizar, criar e excluir pedidos</p>
                 </CardContent>
               </Card>
             </Link>
@@ -57,11 +57,11 @@ export default function Dashboard() {
         <TabsContent value="analytics" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Analytics</CardTitle>
-              <CardDescription>View analytics for your orders, customers, and products</CardDescription>
+              <CardTitle>Análises</CardTitle>
+              <CardDescription>Visualize análises para seus pedidos, clientes e produtos</CardDescription>
             </CardHeader>
             <CardContent>
-              <p>Analytics dashboard coming soon...</p>
+              <p>Painel de análises em breve...</p>
             </CardContent>
           </Card>
         </TabsContent>

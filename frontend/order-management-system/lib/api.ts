@@ -24,8 +24,10 @@ export interface Order {
   products: ProductInOrder[]
 }
 
+// API base URL
 const API_URL = "http://localhost:8082"
 
+// Atualizado para lidar com a estrutura de resposta da API
 async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
