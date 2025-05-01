@@ -9,8 +9,7 @@ COPY . .
 
 WORKDIR /src/OrderService.CommandAPI/OrderService.CommandAPI.API
 RUN dotnet restore
-
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish "OrderService.CommandAPI.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app

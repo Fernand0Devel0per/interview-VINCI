@@ -8,8 +8,7 @@ COPY . .
 
 WORKDIR /src/OrderService.QueryAPI/OrderService.QueryAPI.Worker
 RUN dotnet restore
-
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish "OrderService.QueryAPI.Worker.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app

@@ -24,7 +24,7 @@ export interface Order {
   products: ProductInOrder[]
 }
 
-const API_URL = "http://localhost:5216"
+const API_URL = "http://localhost:8082"
 
 async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_URL}${endpoint}`, {

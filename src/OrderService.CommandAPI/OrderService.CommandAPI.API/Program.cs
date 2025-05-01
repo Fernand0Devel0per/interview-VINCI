@@ -13,7 +13,9 @@ try
     Log.Information("Starting OrderService.CommandAPI");
 
     var builder = WebApplication.CreateBuilder(args);
-
+    
+    builder.WebHost.UseUrls("http://*:80");
+    
     builder.Host.UseSerilog(Log.Logger);
     
     builder.Services.AddCors(options =>
@@ -21,7 +23,7 @@ try
         options.AddPolicy("AllowGateway", policy =>
         {
             policy
-                .WithOrigins("http://localhost:5000") // ou AllowAnyOrigin() se estiver testando
+                .WithOrigins("http://localhost:5000")
                 .AllowAnyMethod()
                 .AllowAnyHeader();
         });

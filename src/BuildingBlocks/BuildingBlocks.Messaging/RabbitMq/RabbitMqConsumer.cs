@@ -13,6 +13,12 @@ public class RabbitMqConsumer : IMessageConsumer, IAsyncDisposable
 
     public RabbitMqConsumer(string hostName, string userName, string password)
     {
+        (_connection, _channel) = CreateConnectionWithRetry(hostName, userName, password);
+
+    }
+    
+    private (IConnection connection, IChannel channel) CreateConnectionWithRetry(string hostName, string userName, string password)
+    {
         var factory = new ConnectionFactory
         {
             HostName = hostName,
@@ -20,8 +26,27 @@ public class RabbitMqConsumer : IMessageConsumer, IAsyncDisposable
             Password = password
         };
 
-        _connection = factory.CreateConnectionAsync().Result;
-        _channel = _connection.CreateChannelAsync().Result;
+        const int maxAttempts = 5;
+        int attempt = 0;
+        Exception? lastException = null;
+
+        while (attempt < maxAttempts)
+        {
+            try
+            {
+                var connection = factory.CreateConnectionAsync().Result;
+                var channel = connection.CreateChannelAsync().Result;
+                return (connection, channel);
+            }
+            catch (Exception ex)
+            {
+                attempt++;
+                lastException = ex;
+                Thread.Sleep(TimeSpan.FromSeconds(10));
+            }
+        }
+
+        throw new Exception("Could not connect to RabbitMQ after multiple attempts", lastException);
     }
 
     public async Task SubscribeAsync<TMessage>(

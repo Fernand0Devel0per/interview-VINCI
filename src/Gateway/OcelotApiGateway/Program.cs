@@ -3,6 +3,8 @@ using Ocelot.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseUrls("http://*:80");
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -14,7 +16,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Configuration.AddJsonFile("ocelot.Development.json", optional: false, reloadOnChange: true);
+builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 
 builder.Services.AddOcelot();
 

@@ -18,6 +18,7 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.15" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="MongoDB.Driver" Version="3.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,11 +28,5 @@
     <ProjectReference Include="..\OrderService.QueryAPI.Application\OrderService.QueryAPI.Application.csproj" />
     <ProjectReference Include="..\OrderService.QueryAPI.Domain\OrderService.QueryAPI.Domain.csproj" />
     <ProjectReference Include="..\OrderService.QueryAPI.Infrastructure\OrderService.QueryAPI.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="MongoDB.Driver">
-      <HintPath>..\..\..\..\..\..\.nuget\packages\mongodb.driver\3.3.0\lib\net6.0\MongoDB.Driver.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>
