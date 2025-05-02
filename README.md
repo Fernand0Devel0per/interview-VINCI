@@ -93,7 +93,7 @@ docker compose -f infra/environment/docker-compose.yml up -d
 | **API de Consulta**     | [http://localhost:8081/swagger](http://localhost:8081/swagger) |
 | **API Gateway**         | `http://localhost:8082`                    |
 | **Frontend React**      | [http://localhost:3000](http://localhost:3000) |
-| **Grafana**         | `http://localhost:3001`    
+| **Grafana**         | [http://localhost:3001](http://localhost:3001)  
 
 ---
 
