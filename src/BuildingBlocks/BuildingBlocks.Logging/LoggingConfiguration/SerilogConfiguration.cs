@@ -24,7 +24,7 @@ public static class SerilogConfiguration
                 options.Protocol = OtlpProtocol.Grpc;
                 options.ResourceAttributes = new Dictionary<string, object>
                 {
-                    ["service.name"] = "order-service",
+                    ["service.name"] = Environment.GetEnvironmentVariable("SERVICE_NAME") ?? "order-service",
                     ["service.environment"] = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development"
                 };
             })

@@ -4,6 +4,8 @@ using OrderService.QueryAPI.API.Middlewares;
 using OrderService.QueryAPI.Infrastructure.DependencyInjection;
 using Serilog;
 using BuildingBlocks.Logging.LoggingConfiguration;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 
 var logger = SerilogConfiguration.CreateLogger();
 Log.Logger = logger;
@@ -17,6 +19,18 @@ try
     builder.WebHost.UseUrls("http://*:80");
     
     builder.Host. UseSerilog(logger);
+    
+    builder.Services
+        .AddOpenTelemetry()
+        .ConfigureResource(resource => resource
+            .AddService(serviceName: Environment.GetEnvironmentVariable("SERVICE_NAME") ?? "orders-query-api"))
+        .WithMetrics(metrics => metrics
+            .AddAspNetCoreInstrumentation()
+            .AddRuntimeInstrumentation()
+            .AddOtlpExporter(otlp =>
+            {
+                otlp.Endpoint = new Uri("http://lgtm:4317");
+            }));
     
     builder.Services.AddCors(options =>
     {

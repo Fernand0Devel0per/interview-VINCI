@@ -28,6 +28,7 @@ Este projeto foi desenvolvido como parte de um desafio técnico para a posição
 ### Infraestrutura
 - **Docker e Docker Compose**
 - **SQL Server**, **MongoDB**, **Redis**, **RabbitMQ**
+- **OpenTelemetry para observabilidade**, **Grafana**
 - **Containers separados para APIs, Worker, Gateway e Frontend**
 
 ---
@@ -92,6 +93,7 @@ docker compose -f infra/environment/docker-compose.yml up -d
 | **API de Consulta**     | [http://localhost:8081/swagger](http://localhost:8081/swagger) |
 | **API Gateway**         | `http://localhost:8082`                    |
 | **Frontend React**      | [http://localhost:3000](http://localhost:3000) |
+| **Grafana**         | `http://localhost:3001`    
 
 ---
 

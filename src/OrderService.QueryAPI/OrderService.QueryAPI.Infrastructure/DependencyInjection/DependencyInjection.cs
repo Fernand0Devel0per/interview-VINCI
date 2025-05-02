@@ -36,8 +36,14 @@ namespace OrderService.QueryAPI.Infrastructure.DependencyInjection
                 return client.GetDatabase(databaseName);
             });
 
-            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(configuration["Redis:ConnectionString"]));
-            services.AddSingleton<ICacheService, RedisCacheService>();
+            var redisConfig = configuration.GetSection("Redis:ConnectionString").Value;
+            var options = ConfigurationOptions.Parse(redisConfig);
+            options.AbortOnConnectFail = false;
+            
+            services.AddSingleton<IConnectionMultiplexer>(sp =>
+                ConnectionMultiplexer.Connect(options));
+            
+            services.AddScoped<ICacheService, RedisCacheService>();
             
             services.AddScoped<ICustomerMongoRepository, CustomerMongoRepository>();
             services.AddScoped<IProductMongoRepository, ProductMongoRepository>();
@@ -67,8 +73,14 @@ namespace OrderService.QueryAPI.Infrastructure.DependencyInjection
                 return client.GetDatabase(databaseName);
             });
             
-            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(configuration["Redis:ConnectionString"]));
-            services.AddSingleton<ICacheService, RedisCacheService>();
+            var redisConfig = configuration.GetSection("Redis:ConnectionString").Value;
+            var options = ConfigurationOptions.Parse(redisConfig);
+            options.AbortOnConnectFail = false;
+            
+            services.AddSingleton<IConnectionMultiplexer>(sp =>
+                ConnectionMultiplexer.Connect(options));
+            
+            services.AddScoped<ICacheService, RedisCacheService>();
             
             services.AddScoped<ICustomerMongoRepository, CustomerMongoRepository>();
             services.AddScoped<IProductMongoRepository, ProductMongoRepository>();
