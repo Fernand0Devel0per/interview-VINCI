@@ -108,6 +108,26 @@ services:
       - orders-query-api
     networks:
       - backend
+    
+  frontend:
+    image: node:20-alpine
+    container_name: frontend
+    working_dir: /app
+    volumes:
+      - ../../frontend/order-management-system:/app
+    ports:
+      - "3000:3000"
+    command: >
+      sh -c "
+        corepack enable &&
+        corepack prepare pnpm@10.10.0 --activate &&
+        pnpm install &&
+        pnpm build &&
+        pnpm start"
+    depends_on:
+      - api-gateway
+    networks:
+      - backend
 
 networks:
   backend:
