@@ -5,8 +5,7 @@ import { ProductActions } from "./product-actions"
 import { CreateProductButton } from "./create-product-button"
 
 export default async function ProductsPage() {
-  // Buscar dados no servidor
-  const products = await getProducts()
+  const products = (await getProducts()) ?? []
 
   return (
     <div className="space-y-4">

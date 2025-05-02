@@ -35,60 +35,78 @@ export interface CreateOrderDto {
 }
 
 // API base URL
-const API_URL = "http://localhost:8082"
+const API_URL = "http://api-gateway"
 
 // Função genérica para buscar dados da API
-async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const response = await fetch(`${API_URL}${endpoint}`, {
+async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T | undefined> {
+  const url = `${API_URL}${endpoint}`;
+
+  const response = await fetch(url, {
     ...options,
     headers: {
       "Content-Type": "application/json",
       ...options.headers,
     },
-    // Importante para Server Components para evitar cache
     cache: "no-store",
-  })
+  });
+
+  const rawText = await response.text();
 
   if (!response.ok) {
-    const error = await response.text()
-    throw new Error(error || "Ocorreu um erro ao buscar dados")
+    console.error(`Erro na requisição para ${url}: ${response.status}`);
+    console.error(`Corpo da resposta de erro: ${rawText}`);
+    throw new Error(rawText || `Erro ${response.status}`);
   }
 
-  const result = await response.json()
+  if (!rawText || rawText.trim() === "") {
+    console.warn(`Resposta vazia de ${url}, retornando undefined`);
+    return undefined;
+  }
+
+  let result: any;
+  try {
+    result = JSON.parse(rawText);
+  } catch (err) {
+    console.error(`Falha ao fazer parse do JSON da resposta de ${url}:`, rawText);
+    throw new Error("Resposta inválida da API");
+  }
 
   if (result.success === false) {
-    throw new Error(result.message || "A operação falhou")
+    throw new Error(result.message || "A operação falhou");
   }
 
-  return result.data
+  return result.data;
 }
 
+
+
 // Customer API
-export async function getCustomers(): Promise<Customer[]> {
+export async function getCustomers(): Promise<Customer[] | undefined> {
   return fetchApi<Customer[]>("/customers")
 }
 
-export async function getCustomerById(id: string): Promise<Customer> {
+export async function getCustomerById(id: string): Promise<Customer | undefined> {
   return fetchApi<Customer>(`/customers/${id}`)
 }
 
 // Product API
-export async function getProducts(): Promise<Product[]> {
+export async function getProducts(): Promise<Product[] | undefined> {
   return fetchApi<Product[]>("/products")
 }
 
-export async function getProductById(id: string): Promise<Product> {
+export async function getProductById(id: string): Promise<Product | undefined> {
   return fetchApi<Product>(`/products/${id}`)
 }
 
 // Order API
-export async function getOrders(): Promise<Order[]> {
+export async function getOrders(): Promise<Order[] | undefined> {
   return fetchApi<Order[]>("/orders")
 }
 
-export async function getOrderById(id: string): Promise<Order> {
+export async function getOrderById(id: string): Promise<Order | undefined> {
   return fetchApi<Order>(`/orders/${id}`)
 }
+
 
 // Server Actions para mutações
 export async function createCustomer(formData: FormData) {

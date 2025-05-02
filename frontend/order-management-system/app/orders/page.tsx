@@ -6,8 +6,8 @@ import { CreateOrderButton } from "./create-order-button"
 import { CustomerFilter } from "./customer-filter"
 
 export default async function OrdersPage() {
-  const orders = await getOrders()
-  const customers = await getCustomers()
+  const orders = (await getOrders()) ?? []
+  const customers = (await getCustomers()) ?? []
 
   return (
     <div className="space-y-4">

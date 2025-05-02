@@ -28,7 +28,7 @@ export default async function CustomersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {customers.length === 0 ? (
+              {!customers || customers.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={3} className="text-center">
                     Nenhum cliente encontrado
