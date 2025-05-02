@@ -23,7 +23,7 @@ services:
       - ../sql:/scripts
     entrypoint: >
       /bin/bash -c "
-      sleep 15 &&
+      sleep 60 &&
       /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P ${DB_SA_PASSWORD} -i /scripts/init.sql"
     networks:
       - backend
@@ -58,6 +58,18 @@ services:
       - "15672:15672"
     networks:
       - backend
+  lgtm:
+    image: grafana/otel-lgtm
+    container_name: lgtm
+    ports:
+      - "3001:3000"
+      - "4317:4317"
+      - "4318:4318"
+      - "12345:12345"
+    environment:
+      - OTEL_SERVICE_NAME=lgtm
+    networks:
+      - backend
 
   orders-command-api:
     build:
@@ -69,6 +81,8 @@ services:
     depends_on:
       - sqlserver
       - rabbitmq
+    environment:
+      - SERVICE_NAME=orders-command-api
     networks:
       - backend
 
@@ -82,6 +96,8 @@ services:
     depends_on:
       - mongodb
       - redis
+    environment:
+      - SERVICE_NAME=orders-query-api
     networks:
       - backend
 
@@ -93,6 +109,8 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
+    environment:
+      - SERVICE_NAME=orders-worker
     networks:
       - backend
 
@@ -106,8 +124,11 @@ services:
     depends_on:
       - orders-command-api
       - orders-query-api
+    environment:
+      - SERVICE_NAME=api-gateway
     networks:
       - backend
+
     
   frontend:
     image: node:20-alpine
